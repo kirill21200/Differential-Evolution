@@ -32,7 +32,7 @@ def grivank_func(x):
     return sum - prod + 1
 
 
-def de(fobj, r_min, r_max, popsize, its, F=0.7, Cr=0.8, dim=1):
+def diff_evo(fobj, r_min, r_max, popsize, its, F=0.7, Cr=0.8, dim=1):
     pop = np.random.uniform(r_min, r_max, (popsize, dim))
     us = pop.copy()
     gen = 0
@@ -64,9 +64,8 @@ def de(fobj, r_min, r_max, popsize, its, F=0.7, Cr=0.8, dim=1):
 
         best = min(pop, key=fobj)
         best_value = fobj(best)
-        # results.append(pop.copy())
-        results.append(best_value)
-
+        #results.append(pop.copy())
+        # results.append(best_value)
     return results
 
 
@@ -94,8 +93,8 @@ def drow_3d_graph(func, r_min, r_max, axis):
             res[i][j] = func(unit)
     results = np.array(res)
 
-    axis.plot_wireframe(x, y, results, alpha=0.1)
-    # axis.plot_surface(x, y, results, cmap='jet')
+    #axis.plot_wireframe(x, y, results, alpha=0.1)
+    axis.plot_surface(x, y, results, cmap='jet')
 
 
 def draw_2d_graph(func, r_min, r_max, axis):
@@ -190,7 +189,7 @@ def pop_anim_2d(func, name):
     axis.set_ylabel('Приспособленность')
 
     draw_2d_graph(func, -10.0, 10.0, axis)
-    pops = de(func, -10.0, 10.0, 20, 40, dim=1)
+    pops = diff_evo(func, -10.0, 10.0, 20, 40, dim=1)
     do_2d_pop_animation(pops, func, axis, figure)
 
 
@@ -202,7 +201,7 @@ def pop_anim_3d(func, name):
     axis.set_ylabel('Второй параметр идивида')
     axis.set_zlabel('Приспособленность')
 
-    pops = de(func, -10.0, 10.0, 20, 100, dim=2)
+    pops = diff_evo(func, -10.0, 10.0, 20, 100, dim=2)
     drow_3d_graph(func, -10.0, 10.0, axis)
     do_3d_pop_animation(pops, func, axis, figure)
 
@@ -211,22 +210,23 @@ def pop_anim_3d(func, name):
 # pop_anim_3d(rosenbrock_func, 'Розенброка')
 
 figure = pyplot.figure()
-axis = figure.add_subplot()
+axis = figure.add_subplot(projection='3d')
+figure.suptitle('Функция Гриванка с двумя параметрами')
+drow_3d_graph(grivank_func, -10.0, 10.0, axis)
 def best_values_graph(func, name, dim, popsize, its):
 
     figure.suptitle(f"Приспособленность {dim}-мерной функции {name} при популяции {popsize}")
     axis.set_xlabel('Поколение')
     axis.set_ylabel('Приспособленность')
 
-    best_values = de(func, -10.0, 10.0, popsize, its, dim=dim)
+    best_values = diff_evo(func, -10.0, 10.0, popsize, its, dim=dim)
     xaxis = range(len(best_values))
     axis.plot(xaxis, best_values)
 
 
-best_values_graph(grivank_func, 'Гринвака', 10, 100, 200)
-best_values_graph(grivank_func, 'Гринвака', 10, 100, 200)
-best_values_graph(grivank_func, 'Гринвака', 10, 100, 200)
-
+# best_values_graph(grivank_func, 'Гринвака', 10, 100, 200)
+# best_values_graph(grivank_func, 'Гринвака', 10, 100, 200)
+# best_values_graph(grivank_func, 'Гринвака', 10, 100, 200)
 
 
 # u = de(eckley_func, -10.0, 10.0, 20, 200, dim=10)
